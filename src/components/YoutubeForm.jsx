@@ -17,7 +17,7 @@
 
 
 import React from 'react';
-import { Formik, Form, Field, ErrorMessage } from 'formik';
+import { Formik, Form, Field, ErrorMessage, FieldArray } from 'formik';
 import * as Yup from "yup";
 import TextError from './TextError';
 //import { TextError } from "./TextError";
@@ -32,7 +32,10 @@ const initialValues = { // initial values is mandatory
   social:{
     facebook:'',
     twitter:''
-  }
+  },
+  phoneNumbers: ['', ''], // to keep two phone numbers in an array
+  dynamicPhoneNumbers: [''] // this iis for FieldArray where we create dynamic phones based on user interaction
+
 };
 const onSubmit =  values =>{ // onSubmit is an arrow function that receives values-form state- as its argument.
   console.log('Form DATA :' , values);
@@ -76,7 +79,6 @@ const YoutubeForm = () => {
               </ErrorMessage>
             </div>
           
-           
             <div className='form-control'>
               <label htmlFor="channel">Channel</label>
               <Field
@@ -111,17 +113,56 @@ const YoutubeForm = () => {
                    
                   }
                 }
-
               </Field>
             </div>
 
             <div className='form-control'>
               <label htmlFor='facebook'>Facebook Profile</label>
-              <Field as='text'  id='facebookId' name='social.facebook' />
+              <Field type='text'  id='facebookId' name='social.facebook' />
             </div>
+
             <div className='form-control'>
               <label htmlFor='twitter'>Twitter Profile</label>
-              <Field as='text'  id='twitterId' name='social.twitter' />
+              <Field type='text'  id='twitterId' name='social.twitter' />
+            </div>
+
+            <div className='form-control'>
+              <label htmlFor='primaryPhone'>Primary Phone Number Profile</label>
+              <Field type='text'  id='primaryPhoneId' name='phoneNumbers[0]' />
+            </div>
+
+            <div className='form-control'>
+              <label htmlFor='secondaryPhone'>Secondary Phone Number Profile</label>
+              <Field type='text'  id='secondaryPhoneId' name='phoneNumbers[1]' />
+            </div>
+
+            <div className='form-control test'>
+              <label htmlFor="dynamicPhoneNumbers">List of Phone Numbers</label>
+              <FieldArray  name='dynamicPhoneNumbers'>
+                {
+                  (fieldArrayProps) => {
+                    console.log(' fieldArray props: ', fieldArrayProps);
+                    const { push, remove, form } = fieldArrayProps; // we are extracting two methods- push & remove - and 1 property fro mthe fieldArray props
+                    const { values } = form; // extract values from form object under fieldArrayProps
+                    const { dynamicPhoneNumbers } = values; // extract dynamicPhoneNumbers fro mvalues object
+                    return (
+                      <div>
+                        {dynamicPhoneNumbers.map( (phoneNumber, index) => (
+                          <div key={index}>
+                            <Field name={`dynamicPhoneNumbers[${index}]`} placeholder='add dynamic phone numbers'/>
+                            {
+                              index > 0 && (
+                                <button type='button' onClick={() => remove(index)}>{' '} - {' '} </button>
+                              )
+                            }
+                            <button type='button' onClick={() => push(index)}>+</button>
+                          </div>
+                        ))}
+                      </div>
+                    )
+                  }
+                }
+              </FieldArray>
             </div>
            
             <button type='submit'> Submit </button>

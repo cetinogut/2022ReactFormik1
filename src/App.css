@@ -11,7 +11,7 @@ label {
 
 input[type='text'], /*type of the input field is specified*/
 input[type='email'],
-textarea {
+textarea, #dynamicPhoneNumbersId, .test {
   display: block;
   width: 400px;
   padding: 6px 12px;
