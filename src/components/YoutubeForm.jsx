@@ -16,7 +16,7 @@
 // the field has been visited and if the error exists
 
 
-import React from 'react';
+import React, { useState } from 'react';
 import { Formik, Form, Field, ErrorMessage, FieldArray, FastField } from 'formik';
 import * as Yup from "yup";
 import TextError from './TextError';
@@ -35,12 +35,26 @@ const initialValues = { // initial values is mandatory
   },
   phoneNumbers: ['', ''], // to keep two phone numbers in an array
   dynamicPhoneNumbers: [''] // this iis for FieldArray where we create dynamic phones based on user interaction
+};
 
+const savedValues = { 
+  name: 'dogan ogut',
+  email: 'dogut@gmail.com',
+  channel: 'mustgoprograess',
+  comments:'test is good',
+  address:'Drive Line 224 Cankaya',
+  social:{
+    facebook:'',
+    twitter:''
+  },
+  phoneNumbers: ['', ''], // to keep two phone numbers in an array
+  dynamicPhoneNumbers: [''] // this iis for FieldArray where we create dynamic phones based on user interaction
 };
 const onSubmit =  (values, onSubmitProps)  =>{ // onSubmit is an arrow function that receives values-form state- as its argument.
   console.log('Form DATA :' , values);
   console.log('Submit Props : ', onSubmitProps);
   onSubmitProps.setSubmitting(false);
+  onSubmitProps.resetForm(); // resets the form after submitting
 };
 
 const validationSchema = Yup.object({
@@ -58,14 +72,19 @@ const validateComments = value => {
   return error
 }
 const YoutubeForm = () => {
+
+  const [formValues, setFormValues] = useState(null)
+
   return (
     <Formik // we passed the three props to Formik component
-      initialValues={initialValues}
+      //initialValues={initialValues}
+      initialValues={ formValues || initialValues}
       validationSchema={validationSchema}
       onSubmit={onSubmit}
       //validateOnChange={false} // validation will not run onChanges event in the form fields
       //validateOnBlur={false} // validation will not run onBlur event in the form fields
       //validateOnMount // at page load auto runs the form validation end since all empt makes isValid false, which will disable the submit button in-turn. But it iis useful for small forms with simple validation rules
+      enableReinitialize // decides the initialization from intial values or savedValues, 
     >
       {// function as children for the Formik component which gives as access to the props which we call here 'formik'. this will return a JSX and in our case it is the whole form component
         formik  => { 
@@ -186,17 +205,19 @@ const YoutubeForm = () => {
               </FieldArray>
             </div>
            
-           <button type='button' onClick={() => formik.validateField('comments')}>Validate Comments</button>
+           {/* <button type='button' onClick={() => formik.validateField('comments')}>Validate Comments</button>
            <button type='button' onClick={() => formik.validateForm()}>Validate All</button>
 
-           <button type='button' onClick={() => formik.setFieldTouched('comments')}>Visit Comments</button>
-           <button type='button' onClick={() => formik.setTouched({
+           <button type='button' onClick={() => formik.setFieldTouched('comments')}>Visit Comments</button> */}
+           
+           {/* <button type='button' onClick={() => formik.setTouched({
             name: true,
             email: true,
             channel: true,
             comments: true
-           })}>Visit name-email-channel-comment</button>
-
+           })}>Visit name-email-channel-comment</button> */}
+            <button type='button' onClick={() => setFormValues(savedValues)}>Load Saved Data</button>
+            <button type='reset'>Reset</button>
             <button type='submit' disabled={!(formik.dirty && formik.isValid) || formik.isSubmitting}> Submit </button>
             </Form>
       )}}
