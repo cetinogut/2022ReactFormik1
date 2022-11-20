@@ -22,7 +22,7 @@ const validationSchema = Yup.object({
   channel: Yup.string().required('channel is required')
 
 })
-const RefactoredYoutubeWithComments = () => {
+const RefactoredYoutubeFormWithComments = () => {
 
   // const  formik = useFormik({  // during the refactoring we passed to Formik instead of useFormik
   //   initialValues,
@@ -100,4 +100,4 @@ const RefactoredYoutubeWithComments = () => {
   )
 }
 
-export default RefactoredYoutubeWithComments
+export default RefactoredYoutubeFormWithComments
